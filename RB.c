@@ -8,7 +8,8 @@
 #include <stdio.h>
 
 
-link z,head;               // Pointers to sentinel and root
+link z,head; // Pointers to sentinel and root
+link live,dead;   //Pointers to live list and Recycling list   
 Item NULLitem=(-9999999);  // Data for sentinel
 
 int trace=0;  // Controls trace output for insert
@@ -31,6 +32,8 @@ void STinit()
 head = (z = NEW(NULLitem, 0, 0, 0));
 head->red=0;
 }
+
+
 
 Item searchR(link h, Key v)
 // Recursive search for a key
@@ -404,6 +407,8 @@ for (i=0;i<depth;i++)
   printf("     ");
 if (h->red)
   printf("[%d %d %d]\n",key(h->item),h->N,bhBelow);
+else if(h->red == 1 && h->tombstone =='1')
+  printf("[(%d) %d %d]\n",key(h->item),h->N,bhBelow);
 else if(h->red == 0 && h->tombstone == '1')
   printf("((%d) %d %d)\n",key(h->item),h->N,bhBelow);
 else
@@ -495,12 +500,52 @@ void STdelete(Key v)
 }
 
 
+void divvyLists()
+{
+// Root/sentinel (head/z) is always black
+live = (z = NEW(NULLitem, 0, 0, 0));
+live->red=0;
+dead = (z = NEW(NULLitem, 0, 0, 0));
+dead->red=0;
+
+//loop through each member of head list and divvy up based on tombstone
+
+
+
+}
+
+
+int findRankOfX(link h, Item v)
+{
+   int rank = 1;
+	while(h != z)
+	{
+
+	if(v < h->item)
+	{
+	h = h->l;
+	}
+	else if(v > h->item && h->tombstone == 0)
+	{
+	rank += 1 + h->l->N;
+	h = h->r;
+	}
+	else
+	{
+	printf("Rank is %d\n", (rank + h->l->N));
+	return rank + h->l->N;
+	}
+	}
+	return printf("not found.\n");
+}
+
 int main( int argc, const char* argv[] )
 {	
 
 	//Note: if entering an option that only needs one number, please enter that number twice
 	int choice;
 	int choice2;
+	int rank;
 
 	STinit(); //initialize the red black tree with a black sentinel node
 	traceOff();
@@ -520,7 +565,7 @@ int main( int argc, const char* argv[] )
 		}
 		else if(choice ==3)
 		{
-		
+		findRankOfX(head, choice2);
 		}
 		else if(choice ==4)
 		{
@@ -533,7 +578,7 @@ int main( int argc, const char* argv[] )
 		}
 		else if(choice ==6)
 		{
-
+		divvyLists();
 
 		}
 		else if(choice ==7)
