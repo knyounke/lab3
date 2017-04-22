@@ -517,7 +517,7 @@ dead->red=0;
 
 int findRankOfX(link h, Item v)
 {
-   int rank = 1;
+   int rank = 1; //include the number itself since not larger than
 	while(h != z)
 	{
 
@@ -536,7 +536,22 @@ int findRankOfX(link h, Item v)
 	return rank + h->l->N;
 	}
 	}
-	return printf("not found.\n");
+	return printf("not found.\n"); //not in the tree
+}
+
+void findKeyWithRankK(link h, int rank)
+{
+	int found;
+  while(h != z)
+	{ 
+	found = findRankOfX(head, h->item);
+	if(found == rank)
+	{ printf("%d\n", h->item);
+	h = h->l;
+	 }
+	}
+
+
 }
 
 int main( int argc, const char* argv[] )
@@ -569,7 +584,7 @@ int main( int argc, const char* argv[] )
 		}
 		else if(choice ==4)
 		{
-
+		findKeyWithRankK(head, choice2);
 		}
 		else if(choice ==5)
 		{
