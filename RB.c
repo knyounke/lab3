@@ -404,6 +404,8 @@ for (i=0;i<depth;i++)
   printf("     ");
 if (h->red)
   printf("[%d %d %d]\n",key(h->item),h->N,bhBelow);
+else if(h->red == 0 && h->tombstone == '1')
+  printf("((%d) %d %d)\n",key(h->item),h->N,bhBelow);
 else
   printf("(%d %d %d)\n",key(h->item),h->N,bhBelow);
 printTree(h->l,depth+1,bhBelow);
@@ -483,8 +485,8 @@ void STdelete(Key v)
 {
 	link location;
 	location = returnlocation(head, v);
-	if(location == z){
-	printf("Error. Node not in tree.");}
+	if(location == z || location->tombstone == '1'){
+	printf("Error. Node not in tree or already dead.");}
 	else
 	{ location->tombstone = '1';
 	//printf("node %d made tombstone", location->item);
