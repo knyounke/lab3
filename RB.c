@@ -4,6 +4,10 @@
 
 // July 22, 2016 - modified for CLRS, 3rd ed. insertion
 
+// To compile use gcc RB.c
+// Features 0, 1, 2, 3, 7, 8 should all be working. Bug in feature 4
+
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -371,15 +375,16 @@ void verifyRBproperties()
 int lpbHeight;
 
 if (head->red)
-  printf("Root is not black!\n");
+  printf("corrupt!\n");
 if (z->red)
-  printf("Sentinel is not black!\n");
+  printf("corrupt!\n");
 lastInorder=(-99999999);
 checkInorder(head);
 checkRed(head,0);
 lpbHeight=leftPathBlackHeight(head);
 checkBlack(head,lpbHeight);
 checkN(head);
+printf("clean.");
 }
 
 void printTree(link h,int depth,int bhAbove)
@@ -539,14 +544,38 @@ int findRankOfX(link h, Item v)
 	return printf("not found.\n"); //not in the tree
 }
 
+
+Item findRank(link h, int v)
+	{ //include the number itself since not larger than
+	int rank = 1;
+	while(h != z)
+	{
+
+	if(v < h->item)
+	{
+	h = h->l;
+	}
+	else if(v > h->item && h->tombstone == 0)
+	{
+	rank += (1 + h->l->N);
+	h = h->r;
+	}
+	else
+	{
+	return (rank + h->l->N);
+	}
+	}
+	return printf("not found.\n"); //not in the tree
+}
+
 void findKeyWithRankK(link h, int rank)
 {
 	int found;
   while(h != z)
 	{ 
-	found = findRankOfX(head, h->item);
+	found = findRank(head, h->item);
 	if(found == rank)
-	{ printf("%d\n", h->item);
+	{ printf("Key %d has rank %d\n", h->item, rank);
 	h = h->l;
 	 }
 	}
@@ -568,7 +597,8 @@ int main( int argc, const char* argv[] )
 	
 	while(choice != 0)
 	{
-		scanf("%d %d",&choice, &choice2);
+		scanf("%d %d",&choice, &choice2); //Problem here if echoing input. Not sure how to fix
+		printf("%d %d\n", choice, choice2);
 	 	
 		if (choice == 1)
 		{
@@ -602,7 +632,7 @@ int main( int argc, const char* argv[] )
 		}
 		else if(choice==8)
 		{
-
+		verifyRBproperties();
 		}
 	}
 
